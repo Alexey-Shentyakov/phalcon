@@ -1,0 +1,67 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="row">
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li class="nav-item"><?php echo $this->tag->linkTo(["customers/index", "Go Back"]); ?></li>
+            <li class="nav-item"><?php echo $this->tag->linkTo(["customers/new", "Create "]); ?></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row page-header">
+    <h1>Search result</h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<div class="row justify-content-center">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Customer</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Balance</th>
+
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($page->items as $customer): ?>
+            <tr>
+            <td><?php echo $customer->customer_id ?></td>
+            <td><?php echo $customer->name ?></td>
+            <td><?php echo $customer->phone_number ?></td>
+            <td><?php echo $customer->balance ?></td>
+
+            <td><?php echo $this->tag->linkTo(["customers/edit/" . $customer->customer_id, "Edit"]); ?></td>
+            <td><?php echo $this->tag->linkTo(["customers/delete/" . $customer->customer_id, "Delete"]); ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-sm-1">
+        <p class="" style="line-height: 1.42857;padding: 6px 12px;">
+            <?php echo $page->current, "/", $page->total_pages ?>
+        </p>
+    </div>
+    <div class="col-sm-11">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><?php echo $this->tag->linkTo(["customers/search", "First", "class" => "page-link"]) ?></li>
+                <li class="page-item"><?php echo $this->tag->linkTo(["customers/search?page=" . $page->before, "Previous", "class" => "page-link"]) ?></li>
+                <li class="page-item"><?php echo $this->tag->linkTo(["customers/search?page=" . $page->next, "Next", "class" => "page-link"]) ?></li>
+                <li class="page-item"><?php echo $this->tag->linkTo(["customers/search?page=" . $page->last, "Last", "class" => "page-link"]) ?></li>
+            </ul>
+        </nav>
+    </div>
+</div>

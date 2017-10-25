@@ -1,0 +1,85 @@
+<?php
+use Phalcon\Cache\Backend\File as BackFile;
+use Phalcon\Cache\Frontend\Output as FrontOutput;
+
+// cache
+
+$frontCache = new FrontOutput(
+    [
+        "lifetime" => 172800,
+    ]
+);
+
+$cache = new BackFile(
+    $frontCache,
+    [
+        "cacheDir" => $config['application']['cacheDir']
+    ]
+);
+
+$content = $cache->start("my-cache.html");
+
+if ($content === null):
+?>
+
+<div class="row page-header">
+    <h1>All orders</h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<div class="row">
+    <table class="table table-bordered">
+		
+        <thead>
+        <tr>
+        <th>order id</th>
+        <th>order details</th>
+        <th>order status</th>
+        <th>order cost</th>
+        <th>customer name</th>
+        </tr>
+        </thead>
+
+        <tbody>
+			<?php foreach ($page->items as $order): ?>
+			<tr>
+			<td><?php echo $order->order_id ?></td>
+			<td><?php echo $order->details ?></td>
+			<td><?php echo $order->status ?></td>
+			<td><?php echo $order->cost ?></td>
+			<td><?php echo $order->customer_name ?></td>
+			</tr>
+			<?php endforeach; ?>
+        </tbody>
+
+        </table>
+</div>
+
+<div class="row">
+    <div class="col-sm-1">
+        <p class="" style="line-height: 1.42857;padding: 6px 12px;">
+            <?php echo $page->current, "/", $page->total_pages ?>
+        </p>
+    </div>
+    <div class="col-sm-11">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><?php echo $this->tag->linkTo(["index/allorders", "First", "class" => "page-link"]) ?></li>
+                <li class="page-item"><?php echo $this->tag->linkTo(["index/allorders?page=" . $page->before, "Previous", "class" => "page-link"]) ?></li>
+                <li class="page-item"><?php echo $this->tag->linkTo(["index/allorders?page=" . $page->next, "Next", "class" => "page-link"]) ?></li>
+                <li class="page-item"><?php echo $this->tag->linkTo(["index/allorders?page=" . $page->last, "Last", "class" => "page-link"]) ?></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<?php
+$cache->save();
+
+else:
+
+echo $content;
+
+endif;
+?>
